@@ -1,0 +1,42 @@
+{
+  "name": "d3-hinton",
+  "version": "0.0.1",
+  "description": "d3-hinton is a D3 plugin for displaying Hinton diagrams.",
+  "keywords": [
+    "d3",
+    "d3-module"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "build/d3-hinton.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/narphorium/d3-hinton",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/narphorium/d3-hinton"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup -c",
+    "test": "tape 'test/**/*-test.js'",
+    "prepare": "npm run test && uglifyjs build/d3-hinton.js -c -m -o build/d3-hinton.min.js && uglifycss src/hinton.css --output build/d3-hinton.css",
+    "postpublish": "zip -j build/d3-hinton.zip -- LICENSE README.md build/d3-hinton.js build/d3-hinton.min.js build/d3-hinton.css"
+  },
+  "dependencies": {
+    "d3-color": "^1.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "rollup": "^1.15.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-eslint": "^6.0.0",
+    "rollup-plugin-node-resolve": "^5.0.1",
+    "tape": "4",
+    "uglify-es": "3",
+    "uglifycss": "0.0.29"
+  }
+}

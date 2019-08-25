@@ -1,12 +1,12 @@
 {
   "name": "d3-hinton",
   "version": "0.0.1",
-  "description": "d3-hinton is a D3 plugin for displaying Hinton diagrams.",
+  "description": "A D3 plugin for displaying Hinton diagrams.",
   "keywords": [
     "d3",
     "d3-module"
   ],
-  "license": "BSD-3-Clause",
+  "license": "Apache-2.0",
   "main": "build/d3-hinton.js",
   "jsnext:main": "index",
   "homepage": "https://github.com/narphorium/d3-hinton",

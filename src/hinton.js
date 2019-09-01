@@ -43,26 +43,22 @@ class Annotation {
 }
 
 class HintonDiagram {
-  constructor (element, data, config) {
+  constructor (element, numRows, numColumns, config) {
     this.element = element
     this.config = config
-    if (!this.config) this.config = {}
-    this.data = data
+    if (this.config == null) this.config = {}
 
-    this.config.numColumns = data.length
-    this.config.numRows = data[0].length
+    this.config.numColumns = numColumns
+    this.config.numRows = numRows
     this.config.cellSize = 20
     this.config.cellPadding = 1
     this.config.paddedCellSize = this.config.cellSize + this.config.cellPadding
     this.config.width = this.config.numColumns * this.config.paddedCellSize
     this.config.height = this.config.numRows * this.config.paddedCellSize
 
-    var widthMargin = 2
-    var heightMargin = 2
-
     var svg = this.element.append('svg')
-      .attr('width', this.config.paddedCellSize * this.config.numColumns + widthMargin)
-      .attr('height', this.config.paddedCellSize * this.config.numRows + heightMargin)
+      .attr('width', this.config.paddedCellSize * this.config.numColumns)
+      .attr('height', this.config.paddedCellSize * this.config.numRows)
       .attr('class', 'd3-hinton')
 
     this.container = svg.append('g')
@@ -83,28 +79,20 @@ class HintonDiagram {
     }
 
     this.annotationContainer = this.container.append('g')
-
-    this.columns = []
-    var row = this.container.append('g')
+    this.cells = []
 
     // TODO: replace this with enter() and exit() code
-    for (var x = 0; x < this.config.numColumns; x++) {
-      var cellCoordinates = []
-      this.columns.push(cellCoordinates)
-      for (var y = 0; y < this.config.numRows; y++) {
-        var cell = row.append('rect')
+    for (var row = 0; row < this.config.numRows; row++) {
+      this.cells[row] = []
+      for (var col = 0; col < this.config.numColumns; col++) {
+        this.cells[row][col] = this.container.append('rect')
           .attr('class', 'd3-hinton-cell')
-          .attr('x', x * this.config.paddedCellSize)
-          .attr('y', y * this.config.paddedCellSize)
+          .attr('x', col * this.config.paddedCellSize)
+          .attr('y', row * this.config.paddedCellSize)
           .attr('width', this.config.cellSize * 0.5)
           .attr('height', this.config.cellSize * 0.5)
-        // .on("mouseover", this.handleMouseOver)
-        // .on("mouseout", this.handleMouseOut);
-        cellCoordinates.push(cell)
       }
     }
-
-    this.update(data, 0)
   }
 
   drawGridLines (container) {
@@ -148,18 +136,21 @@ class HintonDiagram {
   }
 
   update (data, duration) {
-    for (var i = 0; i < this.config.numColumns; i++) {
-      var cellCoordinates = this.columns[i]
-      for (var j = 0; j < this.config.numRows; j++) {
-        var cell = cellCoordinates[j]
-        cell.classed('negative', data[j][i] < 0.0)
-        var v = Math.min(1.0, Math.abs(data[j][i]))
+    for (var col = 0; col < this.config.numColumns; col++) {
+      for (var row = 0; row < this.config.numRows; row++) {
+        var cell = this.cells[row][col]
+        var dv = data[row][col]
+        if (this.config.transpose) {
+          dv = data[col][row]
+        }
+        cell.classed('negative', dv < 0.0)
+        var v = Math.min(1.0, Math.abs(dv))
 
         var s = (this.config.cellSize * 0.8) * Math.sqrt(v)
         if (!s) s = 0.0
         var o = (this.config.cellSize - s) / 2.0
-        var x = i * this.config.paddedCellSize
-        var y = j * this.config.paddedCellSize
+        var x = col * this.config.paddedCellSize
+        var y = row * this.config.paddedCellSize
         var cellTransition = cell.transition()
         cellTransition.attr('x', x + o)
           .attr('y', y + o)
@@ -171,8 +162,9 @@ class HintonDiagram {
   }
 }
 
-export default function (elementID, data, config) {
+export default function (elementID, numRows, numColumns, config) {
   return new HintonDiagram(elementID,
-    data,
+    numRows,
+    numColumns,
     config)
 }

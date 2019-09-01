@@ -1,0 +1,36 @@
+<html>
+<head>
+  <title>Hinton Memory Visualization</title>
+  <link rel="stylesheet" href="../build/d3-hinton.css"/>
+  <style>
+  body {
+    width: 400px;
+    margin: 100px auto;
+  }
+  </style>
+
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="../build/d3-hinton.js"></script>
+</head>
+<body>
+  <div id="confusion_matrix"></div>
+  <script>
+    d3.hinton(d3.select('#confusion_matrix'), 4, 12, {
+      'transpose': true
+    }).update([
+      [0.0, 0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 1.0, 0.0, 0.0],
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, 1.0, 1.0, 1.0],
+      [0.0, 0.0, 1.0, 1.0],
+      [0.0, 0.0, 0.0, 1.0],
+      [0.0, 0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0, 0.0]
+    ])
+  </script>
+</body>
+</html>

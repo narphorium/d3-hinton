@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>Animated Annotation</title>
+  <link rel="stylesheet" href="../node_modules/d3-json-controller/build/d3-json-controller.css"/>
+  <link rel="stylesheet" href="../build/d3-hinton.css"/>
+
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="../node_modules/d3-json-controller/build/d3-json-controller.min.js"></script>
+  <script src="../build/d3-hinton.js"></script>
+  <style>
+  .sidebar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+  }
+  .sidebar th {
+    padding: 3px 4px 0 0;
+    font-weight: 500;
+  }
+  </style>
+</head>
+<body>
+  <table style="margin: 0 auto;min-width: 600px">
+    <tr>
+      <td id="weight_view"></td>
+    </tr>
+  </table>
+  <div class="sidebar">
+    <table>
+      <tr><th>Step</th><td id='controls'></td></tr>
+    </table>
+  </div>
+
+  <script>
+
+  d3.json('data/annotation.json', function(data){
+
+    var controller = d3.JSONController(data);
+    controller.goto(0, 0);
+    controller.controls(d3.select('#controls'), 0);
+
+    var weights_path = '$[*].weights'
+    var h1 = d3.hinton(d3.select('#weight_view'), 6, 6)
+    controller.registerListener(h1.update.bind(h1), weights_path)
+    var a1 = h1.annotation({ color:'#16aae6' })
+
+    var host_spot_path = '$[*].hot_spot'
+    controller.registerListener(function(a1) { return function(data, duration){
+      a1.update(data[0], data[1], data[2], data[3], duration)
+    }}(a1), host_spot_path)
+
+    controller.updateListeners(0)
+  });
+
+  </script>
+</body>
+</html>

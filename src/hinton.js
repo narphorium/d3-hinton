@@ -36,7 +36,7 @@ class Annotation {
     var transition = this.annotation.transition()
     transition.attr('x', this.diagramConfig.paddedCellSize * x)
       .attr('y', this.diagramConfig.paddedCellSize * y)
-      .attr('width', this.diagramConfig.cellSize * width)
+      .attr('width', this.diagramConfig.paddedCellSize * width)
       .attr('height', this.diagramConfig.paddedCellSize * height)
       .duration(duration)
   }
@@ -52,7 +52,7 @@ class HintonDiagram {
     this.config.numRows = numRows
     this.config.cellSize = 20
     this.config.cellPadding = 1
-    this.config.paddedCellSize = this.config.cellSize + this.config.cellPadding
+    this.config.paddedCellSize = this.config.cellSize + (this.config.cellPadding * 2)
     this.config.width = this.config.numColumns * this.config.paddedCellSize
     this.config.height = this.config.numRows * this.config.paddedCellSize
 
@@ -87,8 +87,8 @@ class HintonDiagram {
       for (var col = 0; col < this.config.numColumns; col++) {
         this.cells[row][col] = this.container.append('rect')
           .attr('class', 'd3-hinton-cell')
-          .attr('x', col * this.config.paddedCellSize)
-          .attr('y', row * this.config.paddedCellSize)
+          .attr('x', (col * this.config.paddedCellSize) + this.config.cellPadding)
+          .attr('y', (row * this.config.paddedCellSize) + this.config.cellPadding)
           .attr('width', this.config.cellSize * 0.5)
           .attr('height', this.config.cellSize * 0.5)
       }
@@ -149,8 +149,8 @@ class HintonDiagram {
         var s = (this.config.cellSize * 0.8) * Math.sqrt(v)
         if (!s) s = 0.0
         var o = (this.config.cellSize - s) / 2.0
-        var x = col * this.config.paddedCellSize
-        var y = row * this.config.paddedCellSize
+        var x = col * this.config.paddedCellSize + this.config.cellPadding
+        var y = row * this.config.paddedCellSize + this.config.cellPadding
         var cellTransition = cell.transition()
         cellTransition.attr('x', x + o)
           .attr('y', y + o)
